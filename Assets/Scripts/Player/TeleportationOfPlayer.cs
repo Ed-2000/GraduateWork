@@ -12,6 +12,7 @@ public class TeleportationOfPlayer : MonoBehaviour
             newPosition.z = 0;
 
             transform.position = newPosition;
+            PlayerData.Speed += PlayerData.Speed / 10;
         }
     }
 }

@@ -5,17 +5,17 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     private Vector3         _moveVector;
-    private PlayerData      _data;
+    private Transform      _transform;
 
     private void Start()
     {
         _moveVector = Vector3.forward;
-        _data = new PlayerData();
+        _transform = transform;
     }
 
     private void Update()
-    {    
+    {
         //забезпечує рух гравця вперед 
-        transform.Translate(_moveVector * _data.Speed * Time.deltaTime);
+        _transform.Translate(_moveVector * PlayerData.Speed * Time.deltaTime);
     }
 }

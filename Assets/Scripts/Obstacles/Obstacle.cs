@@ -4,35 +4,60 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
+    //надає доступ до _keys (елемент інкапсуляції)
+    public List<int> Keys { get => _keys; }
+
     //масиви елементів з яких складається перешкода (заповнюються через редактор)
-    [SerializeField] private GameObject[]       _obstacleElementNotForTouch;
-    [SerializeField] private GameObject[]       _obstacleElementToTouch;
+    [SerializeField] private GameObject[]       _obstacleElements;
+
+    //перешкода, яку буде продубльовано для збереження ілюзії неперервності
+    [SerializeField] private DuplicateObstacle                   _duplicate;    
 
     //кількості різних об'єктів 
     private int                                 _totalNumberOfObstacleElement;
-    private int                                 _numberOfObstacleElementNotForTouch;
-    private int                                 _numberOfObstacleElementToTouch;
+    private int                                 _numberOfObstacleElement;
 
     //списки чиї елементи нададуть форму першкоді
-    private List<GameObject>                    _activeObstacleElementNotForTouch;
-    private List<GameObject>                    _activeObstacleElementToTouch;
-    
+    private List<GameObject>                    _activeObstacleElement;
+
+    //список-ключів, який знадобиться при зіткненні з гравцем 
+    private List<int>                           _keys;
+
     //метод, який спрацьовує при завантаженні сцени
     private void Start()
     {
-        _totalNumberOfObstacleElement = _obstacleElementNotForTouch.Length;
+        _totalNumberOfObstacleElement = _obstacleElements.Length;
 
-        _activeObstacleElementNotForTouch = new List<GameObject>();
-        _activeObstacleElementToTouch = new List<GameObject>();
+        _activeObstacleElement = new List<GameObject>();
+
+        _keys = new List<int>();
+
+        CreateObstacleShape();
     }
 
-    //метод, який спрацьовує коли гравець входить в трігер
-    private void OnTriggerEnter(Collider other)
+    //метод, що надає перешкоді певної форми
+    private void CreateObstacleShape()
     {
-        if (other.CompareTag("Player"))
+        //генеруємо випадкове число - кількість елементів перешкоди, які буде активовано
+        _numberOfObstacleElement = Random.Range(1, _totalNumberOfObstacleElement);
+
+        //записуємо випадкові індекси у список _keys
+        _keys = SomeMath.CreateRandomUniqueIndexes(_numberOfObstacleElement, 0, _totalNumberOfObstacleElement);
+
+        //дублює елементи цієї перешкоди у спеціальну перешкоду, якщо твкова є
+        if (_duplicate != null)
         {
-            CreateObstacleShape();
+            _duplicate.DuplicateForKey(_keys);
         }
+
+        //заповнюємо список елементів перешкоди відповідними індексам елементами перешкоди, щоб активуваи їх
+        for (int i = 0; i < _keys.Count; i++)
+        {
+            _activeObstacleElement.Add(_obstacleElements[_keys[i]]);
+        }
+
+        //активуємо елементи перешкоди
+        SomeMath.ChangeListActivity(_activeObstacleElement, true);
     }
 
     //метод, який спрацьовує коли гравець виходить з трігера
@@ -40,126 +65,10 @@ public class Obstacle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ChangeListActivity(_activeObstacleElementNotForTouch, false);
-            _activeObstacleElementNotForTouch.Clear();
+            SomeMath.ChangeListActivity(_activeObstacleElement, false);
+            _activeObstacleElement.Clear();
 
-            ChangeListActivity(_activeObstacleElementToTouch, false);
-            _activeObstacleElementToTouch.Clear();
+            CreateObstacleShape();
         }
-    }
-
-    //метод, що надає перешкоді певної форми
-    private void CreateObstacleShape()
-    {
-        //генеруємо випадкове число - кількість елементів перешкоди, яких не варто торкатися
-        _numberOfObstacleElementNotForTouch = Random.Range(1, _totalNumberOfObstacleElement);
-        _numberOfObstacleElementToTouch = _totalNumberOfObstacleElement - _numberOfObstacleElementNotForTouch;
-
-        //створюємо список у який записуємо випадкові індекси
-        List<int> indexes = new List<int>();
-        indexes = CreateRandomUniqueIndexes(_numberOfObstacleElementNotForTouch, 0, _totalNumberOfObstacleElement);
-
-        //заповнюємо список елементів перешкоди яких не варто торкатися індексами, щоб активуваи їх
-        for (int i = 0; i < _numberOfObstacleElementNotForTouch; i++)
-        {
-            _activeObstacleElementNotForTouch.Add(_obstacleElementNotForTouch[indexes[i]]);
-        }
-
-        //активуємо елементи перешкоди яких не варто торкатися
-        ChangeListActivity(_activeObstacleElementNotForTouch, true);
-
-        //записуємо у список індекси, що не ввійшли в попередній список
-        indexes = PApaparam(_numberOfObstacleElementToTouch, 0, _totalNumberOfObstacleElement, indexes);
-
-        //заповнюємо список елементів перешкоди яких варто торкнутися індексами, щоб активуваи їх
-        for (int i = 0; i < _numberOfObstacleElementToTouch; i++)
-        {
-            _activeObstacleElementToTouch.Add(_obstacleElementToTouch[indexes[i]]);
-        }
-
-        //активуємо елементи перешкоди яких варто торкнутися
-        ChangeListActivity(_activeObstacleElementToTouch, true);
-
-    }
-
-    //метод, що перевіряє чи міститься число number в списку list
-    private bool WhetherItContains(List<int> list, int number)
-    {
-        bool res = false;
-
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i] == number)
-            {
-                res = true;
-            }
-        }
-
-        return res;
-    }
-
-    //меетод, що створює список випадкових і неповторних (в межах списку) індексів 
-    private List<int> CreateRandomUniqueIndexes(int numberOfIndexes, int min, int max)
-    {
-        if (numberOfIndexes <= Mathf.Abs(max - min) && min < max)
-        {
-            List<int> list = new List<int>();
-
-            for (int i = min; i < max; i++)
-            {
-                list.Add(i);
-            }
-
-            for (int i = 0; i < numberOfIndexes * 2; i++)
-            {
-                var number = list[Random.Range(0, list.Count)];
-                list.Remove(number);
-                list.Add(number);
-            }
-
-            list.RemoveRange(numberOfIndexes, list.Count - numberOfIndexes);
-            
-            return list;
-        }
-        else
-        {
-            print("ObstacleScript!!!");
-            return null;
-        }
-    }
-
-    //меетод, що створює список випадкових і неповторних (в межах списку) індексів, які не входять у список oldList
-    private List<int> PApaparam(int numberOfIndexes, int min, int max, List<int> oldList)
-    {
-        if (Mathf.Abs(max - min) > oldList.Count && min < max)
-        {
-            List<int> list = new List<int>();
-
-            for (int i = min; i < max; i++)
-            {
-                list.Add(i);
-            }
-
-            for (int i = 0; i < oldList.Count; i++)
-            {
-                list.Remove(oldList[i]);
-            }
-
-            return list;
-        }
-        else
-        {
-            print("ObstacleScript!!!");
-            return null;
-        }
-    }
-
-    //метод, що активує чи деактивує об'єкти з переданого списку
-    private void ChangeListActivity(List<GameObject> obstacles, bool stateOfActivity)
-    {
-        for (int i = 0; i < obstacles.Count; i++)
-        {
-            obstacles[i].SetActive(stateOfActivity);
-        }
-    }
+    }    
 }
