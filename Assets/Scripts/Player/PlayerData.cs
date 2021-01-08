@@ -13,6 +13,10 @@ public class PlayerData : MonoBehaviour
             {
                 _speed = value;
             }
+            else if (value >= _speedLimit)
+            {
+                _speed = _speedLimit;
+            }
         }
     }
 

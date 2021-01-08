@@ -11,7 +11,7 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private GameObject[]       _obstacleElements;
 
     //перешкода, яку буде продубльовано для збереження ілюзії неперервності
-    [SerializeField] private DuplicateObstacle                   _duplicate;    
+    [SerializeField] public DuplicateObstacle                   _duplicate;    
 
     //кількості різних об'єктів 
     private int                                 _totalNumberOfObstacleElement;

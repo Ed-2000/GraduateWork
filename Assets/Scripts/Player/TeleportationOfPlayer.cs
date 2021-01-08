@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TeleportationOfPlayer : MonoBehaviour
 {
@@ -13,6 +11,8 @@ public class TeleportationOfPlayer : MonoBehaviour
 
             transform.position = newPosition;
             PlayerData.Speed += PlayerData.Speed / 10;
+
+            print(PlayerData.Speed);
         }
     }
 }
