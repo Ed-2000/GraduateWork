@@ -42,7 +42,7 @@ public class RoomsSpawner : MonoBehaviour
         }
 
         newPosition = _teleport.transform.position;
-        newPosition.z = usedRooms[_NumberOfRooms - _NumberOfDuplicatedRooms].transform.position.z;
+        newPosition.z = usedRooms[_NumberOfRooms - _NumberOfDuplicatedRooms].transform.position.z + 0.5f;
         _teleport.transform.position = newPosition;
     }
 }

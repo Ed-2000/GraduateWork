@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -14,6 +12,9 @@ public class FPSCounter : MonoBehaviour
 
     private void Start()
     {
+        //робимо цільовий fps рівним частоті оновлень монітора 
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+
         _fpsArr = new float[60];
         _iGlobal = 0;
     }
@@ -28,7 +29,7 @@ public class FPSCounter : MonoBehaviour
         else
         {
             _fps = (int)(_fpsArr.Sum()) / _fpsArr.Length;
-            _fpsText.text = "fps:" + _fps.ToString();
+            _fpsText.text = "fps: " + _fps.ToString();
             _iGlobal = 0;
         }
     }

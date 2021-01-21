@@ -49,12 +49,12 @@ MonoBehaviour:
   - {fileID: 8539398450257246253}
   - {fileID: 8539398450727468226}
   _IsResize: 1
-  _resizeLimit: 0.5
+  _resizeLimit: 0.25
   _IsXMove: 1
   _IsYMove: 1
   _IsZMove: 1
   _moveLimitX: 5.5
-  _moveLimitY: 2.5
+  _moveLimitY: 1
   _moveLimitZ: 1.875
 --- !u!1 &7232945737768692666
 GameObject:
@@ -115,7 +115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7232945738082612481}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13, y: 0, z: 0}
+  m_LocalPosition: {x: -11, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4153359322797087506}
@@ -139,7 +139,7 @@ MonoBehaviour:
   - {fileID: 8539398450582626556}
   - {fileID: 8539398452003540098}
   _IsResize: 1
-  _resizeLimit: 0.5
+  _resizeLimit: 0.25
   _IsXMove: 1
   _IsYMove: 1
   _IsZMove: 1
@@ -171,7 +171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7232945738923799935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0, z: 0}
+  m_LocalPosition: {x: 11, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4153359321827173487}
@@ -195,7 +195,7 @@ MonoBehaviour:
   - {fileID: 8539398451539992449}
   - {fileID: 8539398450217494852}
   _IsResize: 1
-  _resizeLimit: 0.5
+  _resizeLimit: 0.25
   _IsXMove: 1
   _IsYMove: 1
   _IsZMove: 1
@@ -251,7 +251,7 @@ MonoBehaviour:
   - {fileID: 8539398451673399350}
   - {fileID: 8539398451591314962}
   _IsResize: 1
-  _resizeLimit: 0.5
+  _resizeLimit: 0.25
   _IsXMove: 1
   _IsYMove: 1
   _IsZMove: 1

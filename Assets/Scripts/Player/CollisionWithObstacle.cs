@@ -3,76 +3,56 @@ using UnityEngine;
 
 public class CollisionWithObstacle : MonoBehaviour
 {
+    public delegate void PlayerStatus();
+    public delegate void PlayerStatusWithList(List<int> list);
+
+    public static event PlayerStatus OnOvercameObstacle;
+    public static event PlayerStatus OnDidNotOvercameObstacle;
+    public static event PlayerStatusWithList OnDidNotOvercameObstacleWithList;
+
     [SerializeField] GameObject[]   _playerBodyElements;
 
     private void OnTriggerEnter(Collider other)
     {
+        Obstacle obstacle = other.GetComponent<Obstacle>();
+
         //не виконувати далі, якщо на об'єкті other немає скрипта Obstacle
-        if (other.GetComponent<Obstacle>() == null)
-        {
+        if (obstacle == null)
             return;
-        }
 
         //
-        List<int> playerKeys = PlayerKey.Keys;
-        List<int> obstacleKeys = PrepareForComparison(other.GetComponent<Obstacle>().Keys);
-        
+        List<int> playerKeys = PlayerData.Keys;
+        List<int> obstacleKeysOrigin = obstacle.Keys;
+        List<int> obstacleKeys = PrepareForComparison(obstacleKeysOrigin);
+
         //спрацює якщо ключі збігаються
-        if (ComparisonLists(playerKeys, obstacleKeys))
+        if (SomeMath.ComparisonLists(playerKeys, obstacleKeys))
         {
-            for (int i = 0; i < obstacleKeys.Count; i++)
-            {
-                SomeMath.ChangePlayerBodyElementActivity(obstacleKeys[i]);
-            }
+            OnOvercameObstacle?.Invoke();
         }
         //спрацює якщо ключі не збігаються
         else
         {
-            PlayerData.Speed = 0;
-            UI.ActiveDeadMenu();
+            OnDidNotOvercameObstacle?.Invoke();
+            OnDidNotOvercameObstacleWithList?.Invoke(SomeMath.CommonListItems(playerKeys, obstacleKeysOrigin));
         }
-    }
-
-    //метод, що перевіряє списки на ідентичність елементів
-    private bool ComparisonLists(List<int> list1, List<int> list2)
-    {
-        bool res = true;
-
-        if (list1.Count != list2.Count)
-        {
-            res = false;
-        }
-        else
-        {
-            list1.Sort();
-            list2.Sort();
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                {
-                    res = false;
-                }
-            }
-        }
-
-        return res;
     }
 
     //метод, що готує список активних елементів перешкоди чи гравця до порівняння
-    private List<int> PrepareForComparison(List<int> originalKey)
+    private List<int> PrepareForComparison(List<int> originalKeys)
     {
-        List<int> newKey = new List<int>();
+        List<int> newKeys = new List<int>();
 
         for (int i = 0; i < 9; i++)
         {
-            newKey.Add(i);
+            newKeys.Add(i);
         }
 
-        for (int i = 0; i < originalKey.Count; i++)
+        for (int i = 0; i < originalKeys.Count; i++)
         {
-            newKey.Remove(originalKey[i]);
+            newKeys.Remove(originalKeys[i]);
         }
 
-        return newKey;
+        return newKeys;
     }
 }

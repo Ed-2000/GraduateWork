@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class SomeMath : MonoBehaviour
@@ -78,9 +77,58 @@ public class SomeMath : MonoBehaviour
         }
     }
 
-    //метод, що додає ключ до списку ключів гравця
-    public static void ChangePlayerBodyElementActivity(int key)
+    //метод, що перевіряє списки на ідентичність елементів
+    public static bool ComparisonLists(List<int> list1, List<int> list2)
     {
-        PlayerKey.GiveKey(key);
+        bool res = true;
+
+        if (list1.Count != list2.Count)
+        {
+            res = false;
+        }
+        else
+        {
+            list1.Sort();
+            list2.Sort();
+            for (int i = 0; i < list1.Count; i++)
+            {
+                if (list1[i] != list2[i])
+                {
+                    res = false;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    //метод, що повертає всі відмінні елеменети списків
+    public static List<int> RemoveListFromList(List<int> list1, List<int> list2)
+    {
+        List<int> res = new List<int>();
+        res.AddRange(list1);
+
+        for (int i = 0; i < list2.Count; i++)
+        {
+            res.Remove(list2[i]);
+        }
+
+        return res;
+    }
+
+    //метод, що повертає всі спільні елеменети списків
+    public static List<int> CommonListItems(List<int> list1, List<int> list2)
+    {
+        List<int> res = new List<int>();
+
+        for (int i = 0; i < list1.Count; i++)
+        {
+            if (WhetherItIsContained(list2, list1[i]))
+            {
+                res.Add(list1[i]);
+            }
+        }
+
+        return res;
     }
 }
