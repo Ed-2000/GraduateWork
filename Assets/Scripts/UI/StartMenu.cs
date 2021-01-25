@@ -1,19 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.Advertisements;
 
 public class StartMenu : MonoBehaviour
 {
-    public void Play()
+    public delegate void ClickOnButton();
+    public static event ClickOnButton OnButtonClick;
+
+    public void PlayOrigin()
     {
+        OnButtonClick?.Invoke();
         SceneManager.LoadScene(1);
+    }
+
+    public void PlayDarkMode()
+    {
+        OnButtonClick?.Invoke();
+        SceneManager.LoadScene(2);
+    }
+    
+
+    public void OpenSettingsPanel()
+    {
+        OnButtonClick?.Invoke();
+        SceneManager.LoadScene(2);
     }
 
     public void Quit()
     {
-        SceneManager.LoadScene(1);
+        OnButtonClick?.Invoke();
+        Application.Quit();
     }
 }

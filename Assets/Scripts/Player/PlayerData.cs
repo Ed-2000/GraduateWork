@@ -11,17 +11,14 @@ public class PlayerData : MonoBehaviour
         get => _speed;
         set
         {
-            if (_speed != _speedLimit)
+            if (value >= 0 && value < _speedLimit)
             {
-                if (value >= 0 && value < _speedLimit)
-                {
-                    _speed = value;
-                }
-                else if (value >= _speedLimit)
-                {
-                    _speed = _speedLimit;
-                    OnMaxSpeed?.Invoke();
-                }
+                _speed = value;
+            }
+            else if (_speed != _speedLimit && value >= _speedLimit)
+            {
+                _speed = _speedLimit;
+                OnMaxSpeed?.Invoke();
             }
         }
     }
@@ -51,7 +48,7 @@ public class PlayerData : MonoBehaviour
     {
         _speed = 7;
         _score = 0;
-        _speedLimit = 15;
+        _speedLimit = 17.5f;
         _keys = new List<int>();
     }
 

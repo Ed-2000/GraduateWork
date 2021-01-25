@@ -2,7 +2,10 @@
 
 public class SoundController : MonoBehaviour
 {
-    [SerializeField] private AudioSource _audioSource; 
+    [SerializeField] private AudioSource _fonMusic; 
+    [SerializeField] private AudioSource _button; 
+    [SerializeField] private AudioSource _collisionEfects; 
+
     [SerializeField] private AudioClip _buttonClickSound; 
     [SerializeField] private AudioClip _buttonDestroySound; 
     [SerializeField] private AudioClip _loseSound; 
@@ -14,6 +17,9 @@ public class SoundController : MonoBehaviour
         PlayerButton.OnButtonDestroyed += ActivateDestroyedSound;
         CollisionWithObstacle.OnDidNotOvercameObstacle += ActivateLoseSound;
         CollisionWithObstacle.OnOvercameObstacle += ActivateVictorySound;
+
+        //для стартового меню 
+        StartMenu.OnButtonClick += ActivateButtonClickSound;
     }
 
     private void OnDisable()
@@ -22,25 +28,28 @@ public class SoundController : MonoBehaviour
         PlayerButton.OnButtonDestroyed -= ActivateDestroyedSound;
         CollisionWithObstacle.OnDidNotOvercameObstacle -= ActivateLoseSound;
         CollisionWithObstacle.OnOvercameObstacle -= ActivateVictorySound;
+
+        //для стартового меню 
+        StartMenu.OnButtonClick -= ActivateButtonClickSound;
     }
 
     private void ActivateButtonClickSound()
     {
-        _audioSource.PlayOneShot(_buttonClickSound);
+        _button.PlayOneShot(_buttonClickSound);
     }
 
     private void ActivateLoseSound()
     {
-        _audioSource.PlayOneShot(_loseSound);
+        _collisionEfects.PlayOneShot(_loseSound);
     }
 
     private void ActivateDestroyedSound()
     {
-        _audioSource.PlayOneShot(_buttonDestroySound);
+        _button.PlayOneShot(_buttonDestroySound);
     }
 
     private void ActivateVictorySound()
     {
-        _audioSource.PlayOneShot(_victorySound);
+        _collisionEfects.PlayOneShot(_victorySound);
     }
 }

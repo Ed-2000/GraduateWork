@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 3577a6068665e5046bc351497c46b755
+  - enabled: 1
+    path: Assets/Scenes/GameDark.unity
+    guid: 8a70b9cdd19cbad418157b259510bec3
   m_configObjects: {}
