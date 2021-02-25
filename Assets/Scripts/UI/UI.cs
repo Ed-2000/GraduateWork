@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
+    public delegate void SceneLoader(int sceneNumber);
+    public static event SceneLoader LoadScene;
+
     [SerializeField] private GameObject _deadPanel;
     [SerializeField] private GameObject _maxSpeedPanel;
     [SerializeField] private GameObject _scoreMoveTextGO;
@@ -39,12 +42,12 @@ public class UI : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        LoadScene?.Invoke(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Menu()
     {
-        SceneManager.LoadScene(0);
+        LoadScene?.Invoke(0);
     }
 
     private void ActiveDeadMenu()

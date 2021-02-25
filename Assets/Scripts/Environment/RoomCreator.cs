@@ -2,19 +2,19 @@
 
 public class RoomCreator : MonoBehaviour
 {
-    [SerializeField] private GameObject[]       _blocks;
+    [SerializeField] private GameObject[] _blocks;
 
-    [SerializeField] private bool               _IsResize = false;
+    [SerializeField] private bool _IsResize = false;
 
-    [SerializeField] private float              _resizeLimit = 2f;
+    [SerializeField] private float _resizeLimit = 2f;
 
-    [SerializeField] private bool               _IsXMove = false;
-    [SerializeField] private bool               _IsYMove = false;
-    [SerializeField] private bool               _IsZMove = false;
+    [SerializeField] private bool _IsXMove = false;
+    [SerializeField] private bool _IsYMove = false;
+    [SerializeField] private bool _IsZMove = false;
 
-    [SerializeField] private float              _moveLimitX = 2f;
-    [SerializeField] private float              _moveLimitY = 2f;
-    [SerializeField] private float              _moveLimitZ = 2f;
+    [SerializeField] private float _moveLimitX = 2f;
+    [SerializeField] private float _moveLimitY = 2f;
+    [SerializeField] private float _moveLimitZ = 2f;
 
 
     private void Start()

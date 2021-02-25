@@ -46,7 +46,7 @@ public class PlayerData : MonoBehaviour
 
     private void Start()
     {
-        _speed = 7;
+        _speed = 7f;
         _score = 0;
         _speedLimit = 17.5f;
         _keys = new List<int>();

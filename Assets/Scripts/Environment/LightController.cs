@@ -4,17 +4,19 @@ using UnityEngine;
 public class LightController : MonoBehaviour
 {
     [SerializeField] private float _lerpTime;
-    [SerializeField] private Color[] _colors;
+    [SerializeField] private Color[] _lightColors;
 
     private Light _light;
     private int _colorsLength;
+    private Camera _mainCamera;
 
     private void Start()
     {
         _light = GetComponent<Light>();
-        _colorsLength = _colors.Length;
+        _colorsLength = _lightColors.Length;
+        _mainCamera = Camera.main;
 
-        StartCoroutine("СolorСycle");
+        StartCoroutine(СolorСycle());
     }
 
     private IEnumerator СolorСycle()
@@ -27,7 +29,7 @@ public class LightController : MonoBehaviour
         {
             _lerpTimeDT = _lerpTime * Time.deltaTime;
 
-            _light.color = Color.Lerp(_light.color, _colors[colorIndex], _lerpTimeDT);
+            _light.color = Color.Lerp(_light.color, _lightColors[colorIndex], _lerpTimeDT);
 
             t = Mathf.Lerp(t, 1, _lerpTimeDT);
             if (t >= 0.95f)

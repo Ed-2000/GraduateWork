@@ -13,7 +13,7 @@ public class FPSCounter : MonoBehaviour
     private void Start()
     {
         //робимо цільовий fps рівним частоті оновлень монітора 
-        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        Application.targetFrameRate = 60; // Screen.currentResolution.refreshRate;
 
         _fpsArr = new float[60];
         _iGlobal = 0;

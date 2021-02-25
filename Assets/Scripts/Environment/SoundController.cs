@@ -2,7 +2,6 @@
 
 public class SoundController : MonoBehaviour
 {
-    [SerializeField] private AudioSource _fonMusic; 
     [SerializeField] private AudioSource _button; 
     [SerializeField] private AudioSource _collisionEfects; 
 

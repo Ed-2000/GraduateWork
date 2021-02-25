@@ -3,46 +3,101 @@ using UnityEngine;
 
 public class RoomsSpawner : MonoBehaviour
 {
+    [SerializeField] private int _numberOfRoomsVisibleToPlayer;
     [SerializeField] private GameObject _teleport;
-    [SerializeField] private GameObject[] _Rooms;
-    [SerializeField] private Vector3 _StartPosition;
-    [SerializeField] private float _DistanceBetweenRooms;
-    [SerializeField] private int _NumberOfRooms;
-    [SerializeField] private int _NumberOfDuplicatedRooms;
-    [SerializeField] private int _NumberOfRoomsToStart;
+    [SerializeField] private GameObject[] _rooms;
+    [SerializeField] private Vector3 _startPosition;
+    [SerializeField] private float _distanceBetweenRooms;
+    [SerializeField] private int _numberOfRooms;
+    [SerializeField] private int _numberOfDuplicatedRooms;
+    [SerializeField] private int _numberOfRoomsToStart;
+    [SerializeField] private bool _isRotate;
 
-    private void Start()
+    private static List<GameObject> _usedRooms;
+
+    private void Awake()
     {
-        List<GameObject> usedRooms = new List<GameObject>();
+        _usedRooms = new List<GameObject>();
 
         GameObject newRoom;
-        Vector3 newPosition = _StartPosition;
 
-        List<int> roomIndexes = SomeMath.CreateRandomUniqueIndexes(_NumberOfRooms - _NumberOfDuplicatedRooms, 0, _Rooms.Length);
-        List<int> roomRotationCoefficients = SomeMath.CreateRandomIndexes(_NumberOfRooms - _NumberOfDuplicatedRooms, 0, 4);
+        _startPosition.z = -_distanceBetweenRooms * _numberOfRoomsToStart;
+        Vector3 newPosition = _startPosition;
 
-        for (int i = 0; i < _NumberOfRooms - _NumberOfDuplicatedRooms; i++)
+        List<int> roomIndexes = SomeMath.CreateRandomUniqueIndexes(_numberOfRooms - _numberOfDuplicatedRooms, 0, _rooms.Length);
+        List<int> roomRotationCoefficients = SomeMath.CreateRandomIndexes(_numberOfRooms - _numberOfDuplicatedRooms, 0, 4);
+
+        for (int i = 0; i < _numberOfRooms - _numberOfDuplicatedRooms; i++)
         {
-            newRoom = Instantiate(_Rooms[roomIndexes[i]]);
-            newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i] * 90)); //0, 90, 180, 270
-            usedRooms.Add(newRoom);
+            newRoom = Instantiate(_rooms[roomIndexes[i]]);
+            if (_isRotate)
+            {
+                newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i] * 90)); //0, 90, 180, 270
+            }
+            _usedRooms.Add(newRoom);
         }
-        for (int i = 0; i < _NumberOfDuplicatedRooms; i++)
+        for (int i = 0; i < _numberOfDuplicatedRooms; i++)
         {
-            newRoom = Instantiate(usedRooms[i + _NumberOfRoomsToStart]);
-            newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i + _NumberOfRoomsToStart] * 90)); //0, 90, 180, 270
-            usedRooms.Add(newRoom);
+            newRoom = Instantiate(_usedRooms[i + _numberOfRoomsToStart]);
+            if (_isRotate)
+            {
+                newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i + _numberOfRoomsToStart] * 90)); //0, 90, 180, 270
+            }
+            _usedRooms.Add(newRoom);
         }
 
-        for (int i = 0; i < usedRooms.Count; i++)
+        for (int i = 0; i < _usedRooms.Count; i++)
         {
-            newPosition.z = i * _DistanceBetweenRooms;            
-            usedRooms[i].transform.position = _StartPosition + newPosition;
-            usedRooms[i].transform.parent = gameObject.transform;
+            newPosition.z = i * _distanceBetweenRooms;            
+            _usedRooms[i].transform.position = _startPosition + newPosition;
+            _usedRooms[i].transform.parent = gameObject.transform;
+
+            _usedRooms[i].AddComponent<Room>();
+            _usedRooms[i].GetComponent<Room>().RoomNumber = i;
         }
 
-        newPosition = _teleport.transform.position;
-        newPosition.z = usedRooms[_NumberOfRooms - _NumberOfDuplicatedRooms].transform.position.z + 0.5f;
-        _teleport.transform.position = newPosition;
+        if (_teleport != null)
+        {
+            newPosition = _teleport.transform.position;
+            newPosition.z = _usedRooms[_numberOfRooms - _numberOfDuplicatedRooms].transform.position.z + 0.5f;
+            _teleport.transform.position = newPosition;
+        }
+
+        //ObjectPool
+        for (int i = 0; i < _usedRooms.Count - _numberOfDuplicatedRooms; i++)
+        {
+            _usedRooms[i].SetActive(false);
+        }
+
+        for (int i = 0; i < _numberOfRoomsVisibleToPlayer; i++)
+        {
+            _usedRooms[i].SetActive(true);
+        }
+    }
+    
+    private void OnEnable()
+    {
+        Room.OnRoomExit += ActivateRoom;
+    }
+
+    private void OnDisable()
+    {
+        Room.OnRoomExit -= ActivateRoom;
+    }
+
+    private void ActivateRoom(int currentRoomNumber)
+    {
+        if (currentRoomNumber < _usedRooms.Count - _numberOfDuplicatedRooms)
+        {
+            _usedRooms[currentRoomNumber].SetActive(false);
+        }
+
+        if (currentRoomNumber >= _usedRooms.Count - _numberOfRoomsVisibleToPlayer - _numberOfDuplicatedRooms)
+        {
+            currentRoomNumber = currentRoomNumber - (_usedRooms.Count - _numberOfDuplicatedRooms) + _numberOfRoomsToStart;
+        }
+
+        int numberOfRoomYouWantToActivate = currentRoomNumber + _numberOfRoomsVisibleToPlayer;
+        _usedRooms[numberOfRoomYouWantToActivate].SetActive(true);
     }
 }

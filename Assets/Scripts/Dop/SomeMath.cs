@@ -40,25 +40,21 @@ public class SomeMath : MonoBehaviour
     }
 
     //метод, що створює список випадкових і неповторних (в межах списку) індексів 
-    public static List<int> CreateRandomUniqueIndexes(int numberOfIndexes, int min, int max)
+    public static List<int> CreateRandomUniqueIndexes(int numberOfIndexes, int min, int max) 
     {
-        if (numberOfIndexes <= Mathf.Abs(max - min) && min < max)
+        if (min < max && numberOfIndexes <= max - min)
         {
             List<int> list = new List<int>();
 
             for (int i = min; i < max; i++)
             {
-                list.Add(i);
+                list.Add(i); 
             }
 
-            for (int i = 0; i < Mathf.Abs(max - min) * 2; i++)
+            while (list.Count > numberOfIndexes)
             {
-                var number = Random.Range(0, list.Count);
-                list.Add(list[number]);
-                list.RemoveAt(number);
+                list.RemoveAt(Random.Range(0, list.Count));
             }
-
-            list.RemoveRange(numberOfIndexes, list.Count - numberOfIndexes);
 
             return list;
         }

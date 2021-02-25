@@ -31,16 +31,25 @@ public class PlayerButton : MonoBehaviour, IPointerClickHandler
     {
         CollisionWithObstacle.OnOvercameObstacle += DeactivateAllElements;
         CollisionWithObstacle.OnDidNotOvercameObstacleWithList += DestroyActiveElements;
+        RevertButton.OnRevert += OnRevertReaction;
     }
 
     private void OnDisable()
     {
         CollisionWithObstacle.OnOvercameObstacle -= DeactivateAllElements;
         CollisionWithObstacle.OnDidNotOvercameObstacleWithList -= DestroyActiveElements;
+        RevertButton.OnRevert -= OnRevertReaction;
     }
 
     //метод, що реалізує реакцію на натискання
     public void OnPointerClick(PointerEventData eventData)
+    {
+        SmoothAppearanceOfTheObject();
+        OnButtonKey?.Invoke(_buttonKey);
+        OnButtonClick?.Invoke();
+    }
+
+    private void OnRevertReaction()
     {
         SmoothAppearanceOfTheObject();
         OnButtonKey?.Invoke(_buttonKey);

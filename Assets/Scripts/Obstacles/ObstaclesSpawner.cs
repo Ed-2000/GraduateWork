@@ -8,13 +8,18 @@ public class ObstaclesSpawner : MonoBehaviour
     [SerializeField] private GameObject _lastObstaclePrefab;
     [SerializeField] private int _numberOfObstacles;
     [SerializeField] private Vector3 _startPosition;
-    [SerializeField] private Vector3 _finishPosition;
+    [SerializeField] private Transform _teleport;
 
+    private Vector3 _finishPosition;
     private List<GameObject> _usedObstacles;
 
     private void Start()
     {
         _usedObstacles = new List<GameObject>();
+
+        _finishPosition = new Vector3();
+        _finishPosition = _startPosition;
+        _finishPosition.z = _teleport.position.z + _startPosition.z;
 
         float distanceBetweenObstacles = (_finishPosition.z - _startPosition.z) / (_numberOfObstacles - 1);
 
