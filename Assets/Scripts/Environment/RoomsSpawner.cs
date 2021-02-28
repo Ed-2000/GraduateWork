@@ -11,7 +11,6 @@ public class RoomsSpawner : MonoBehaviour
     [SerializeField] private int _numberOfRooms;
     [SerializeField] private int _numberOfDuplicatedRooms;
     [SerializeField] private int _numberOfRoomsToStart;
-    [SerializeField] private bool _isRotate;
 
     private static List<GameObject> _usedRooms;
 
@@ -25,24 +24,15 @@ public class RoomsSpawner : MonoBehaviour
         Vector3 newPosition = _startPosition;
 
         List<int> roomIndexes = SomeMath.CreateRandomUniqueIndexes(_numberOfRooms - _numberOfDuplicatedRooms, 0, _rooms.Length);
-        List<int> roomRotationCoefficients = SomeMath.CreateRandomIndexes(_numberOfRooms - _numberOfDuplicatedRooms, 0, 4);
 
         for (int i = 0; i < _numberOfRooms - _numberOfDuplicatedRooms; i++)
         {
             newRoom = Instantiate(_rooms[roomIndexes[i]]);
-            if (_isRotate)
-            {
-                newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i] * 90)); //0, 90, 180, 270
-            }
             _usedRooms.Add(newRoom);
         }
         for (int i = 0; i < _numberOfDuplicatedRooms; i++)
         {
             newRoom = Instantiate(_usedRooms[i + _numberOfRoomsToStart]);
-            if (_isRotate)
-            {
-                newRoom.transform.rotation = Quaternion.Euler(new Vector3(0, 0, roomRotationCoefficients[i + _numberOfRoomsToStart] * 90)); //0, 90, 180, 270
-            }
             _usedRooms.Add(newRoom);
         }
 
@@ -64,7 +54,7 @@ public class RoomsSpawner : MonoBehaviour
         }
 
         //ObjectPool
-        for (int i = 0; i < _usedRooms.Count - _numberOfDuplicatedRooms; i++)
+        for (int i = 0; i < _usedRooms.Count; i++)
         {
             _usedRooms[i].SetActive(false);
         }
@@ -77,27 +67,41 @@ public class RoomsSpawner : MonoBehaviour
     
     private void OnEnable()
     {
-        Room.OnRoomExit += ActivateRoom;
+        Room.OnRoomExit += ActivateNextRoom;
+        TeleportationOfPlayer.OnPlayerTeleport += DeactivateAllDuplicateRooms;
     }
 
     private void OnDisable()
     {
-        Room.OnRoomExit -= ActivateRoom;
+        Room.OnRoomExit -= ActivateNextRoom;
+        TeleportationOfPlayer.OnPlayerTeleport -= DeactivateAllDuplicateRooms;
     }
 
-    private void ActivateRoom(int currentRoomNumber)
+    private void ActivateNextRoom(int currentRoomNumber)
     {
-        if (currentRoomNumber < _usedRooms.Count - _numberOfDuplicatedRooms)
-        {
-            _usedRooms[currentRoomNumber].SetActive(false);
-        }
+        int duplicateRoomNumberToActivate;
+        _usedRooms[currentRoomNumber].SetActive(false);
 
         if (currentRoomNumber >= _usedRooms.Count - _numberOfRoomsVisibleToPlayer - _numberOfDuplicatedRooms)
         {
+            duplicateRoomNumberToActivate = currentRoomNumber + _numberOfRoomsVisibleToPlayer;
+            if (duplicateRoomNumberToActivate < _numberOfRooms)
+            {
+                _usedRooms[currentRoomNumber + _numberOfRoomsVisibleToPlayer].SetActive(true);
+            }
+
             currentRoomNumber = currentRoomNumber - (_usedRooms.Count - _numberOfDuplicatedRooms) + _numberOfRoomsToStart;
         }
 
         int numberOfRoomYouWantToActivate = currentRoomNumber + _numberOfRoomsVisibleToPlayer;
         _usedRooms[numberOfRoomYouWantToActivate].SetActive(true);
+    }
+
+    private void DeactivateAllDuplicateRooms()
+    {
+        for (int i = 1; i <= _numberOfDuplicatedRooms; i++)
+        {
+            _usedRooms[_numberOfRooms - i].SetActive(false);
+        }
     }
 }

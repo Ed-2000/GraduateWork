@@ -44,7 +44,7 @@ public class SoundController : MonoBehaviour
 
     private void ActivateDestroyedSound()
     {
-        _button.PlayOneShot(_buttonDestroySound);
+        _collisionEfects.PlayOneShot(_buttonDestroySound);
     }
 
     private void ActivateVictorySound()
