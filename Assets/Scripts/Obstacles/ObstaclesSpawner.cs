@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ObstaclesSpawner : MonoBehaviour
@@ -24,7 +23,6 @@ public class ObstaclesSpawner : MonoBehaviour
         float distanceBetweenObstacles = (_finishPosition.z - _startPosition.z) / (_numberOfObstacles - 1);
 
         GameObject newObstacle;
-
         for (int i = 0; i < _numberOfObstacles - 1; i++)
         {
             newObstacle = Instantiate(_obstaclePrefab);
@@ -37,7 +35,7 @@ public class ObstaclesSpawner : MonoBehaviour
         newObstacle.transform.position = _finishPosition;
         _usedObstacles.Add(newObstacle);
 
-        _usedObstacles[0].GetComponent<Obstacle>()._duplicate = _usedObstacles[_usedObstacles.Count-1].GetComponent<DuplicateObstacle>();
+        _usedObstacles[0].GetComponent<Obstacle>().Duplicate = _usedObstacles[_usedObstacles.Count-1].GetComponent<DuplicateObstacle>();
 
         for (int i = 0; i < _usedObstacles.Count; i++)
         {

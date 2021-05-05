@@ -34,12 +34,25 @@ public class PlayerData : MonoBehaviour
         }
     }
 
+    public static int HighScore
+    {
+        get => _highScore;
+        set
+        {
+            if (value > _highScore)
+            {
+                _highScore = value;
+            }
+        }
+    }
+
     public delegate void PlayerScore();
     public static event PlayerScore OnScoreСhanged;
 
     [SerializeField] private static float _speed;
 
     private static int _score;
+    private static int _highScore;
     //список-ключів
     private static List<int> _keys;
     private static float _speedLimit;
@@ -57,6 +70,7 @@ public class PlayerData : MonoBehaviour
         PlayerButton.OnButtonKey += GiveKey;
         CollisionWithObstacle.OnOvercameObstacle += AddSpeed;
         CollisionWithObstacle.OnDidNotOvercameObstacle += Stop;
+        CollisionWithObstacle.OnDidNotOvercameObstacle += ChangeHighScore;
     }
 
     private void OnDisable()
@@ -64,6 +78,7 @@ public class PlayerData : MonoBehaviour
         PlayerButton.OnButtonKey -= GiveKey;
         CollisionWithObstacle.OnOvercameObstacle -= AddSpeed;
         CollisionWithObstacle.OnDidNotOvercameObstacle -= Stop;
+        CollisionWithObstacle.OnDidNotOvercameObstacle -= ChangeHighScore;
     }
 
     //метод, що приймає ключ і додає чи видаляє його зі списку ключів
@@ -87,5 +102,10 @@ public class PlayerData : MonoBehaviour
     private void Stop()
     {
         Speed = 0;
+    }
+
+    private void ChangeHighScore()
+    {
+        HighScore = Score;
     }
 }

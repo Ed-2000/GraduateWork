@@ -77,10 +77,16 @@ public class MasterOfRhythm : MonoBehaviour
         {
             _songPosition = (float)(AudioSettings.dspTime - _dspSongTime);
 
+            if (_songPosition >= _clipLength)
+            {
+                _dspSongTime = (float)AudioSettings.dspTime;
+                _audioSource.Play();
+                _songPosition = (float)(AudioSettings.dspTime - _dspSongTime);
+            }
+
             StartCoroutine(VolumeElement(_waveFormArray[(int)(_samplesInSecond * _songPosition)]));
 
-            //OnVolumeHasChanged?.Invoke(_waveFormArray[(int)(_samplesInSecond * _songPosition)]);
-            yield return new WaitForSeconds(1.0f / _numberOfVolumeInfoUpdate); //20 разів в сек
+            yield return new WaitForSeconds(1.0f / _numberOfVolumeInfoUpdate);
         }
     }
 
@@ -99,7 +105,7 @@ public class MasterOfRhythm : MonoBehaviour
 
             _lastVolume = volume;
 
-            yield return new WaitForSeconds(1.0f / _numberOfVolumeInfoUpdate / _steps); //40 разів в сек
+            yield return new WaitForSeconds(1.0f / _numberOfVolumeInfoUpdate / _steps); 
         }
     }
 }

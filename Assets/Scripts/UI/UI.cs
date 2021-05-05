@@ -7,10 +7,13 @@ public class UI : MonoBehaviour
     public delegate void SceneLoader(int sceneNumber);
     public static event SceneLoader LoadScene;
 
-    [SerializeField] private GameObject _deadPanel;
+    [SerializeField] private GameObject _deadPanel;    
+    [SerializeField] private GameObject _uiObjectsInGamePanel;
     [SerializeField] private GameObject _maxSpeedPanel;
     [SerializeField] private GameObject _scoreMoveTextGO;
     [SerializeField] private Text _scoreText;
+    [SerializeField] private Text _deadPanelScore;
+    [SerializeField] private Text _deadPanelHighScore;
 
     private Text _scoreMoveText;
 
@@ -52,7 +55,11 @@ public class UI : MonoBehaviour
 
     private void ActiveDeadMenu()
     {
+        _uiObjectsInGamePanel.SetActive(false);
         _deadPanel.SetActive(true);
+        _deadPanelScore.text = PlayerData.Score.ToString();
+        _deadPanelScore.text = PlayerData.Score.ToString();
+        _deadPanelHighScore.text = PlayerData.HighScore.ToString();
     }
 
     private void DrawScore()

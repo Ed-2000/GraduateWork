@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    //надає доступ до _keys (елемент інкапсуляції)
     public List<int> Keys { get => _keys; }
+    public DuplicateObstacle Duplicate { get => duplicate; set => duplicate = value; }
 
     //масиви елементів з яких складається перешкода (заповнюються через редактор)
     [SerializeField] private GameObject[] _obstacleElements;
     [SerializeField] private GameObject[] _dopObstacleElements;
 
     //перешкода, яку буде продубльовано для збереження ілюзії неперервності
-    [SerializeField] public DuplicateObstacle _duplicate;
+    private DuplicateObstacle duplicate;
 
     //кількості різних об'єктів 
     private int _totalNumberOfObstacleElement;
@@ -71,9 +71,9 @@ public class Obstacle : MonoBehaviour
         _keys = SomeMath.CreateRandomUniqueIndexes(_numberOfObstacleElement, 0, _totalNumberOfObstacleElement);
 
         //дублює елементи цієї перешкоди у спеціальну перешкоду, якщо тaкова є
-        if (_duplicate != null)
+        if (Duplicate != null)
         {
-            _duplicate.DuplicateForKey(_keys);
+            Duplicate.DuplicateForKey(_keys);
         }
 
         //заповнюємо список елементів перешкоди відповідними індексам елементами перешкоди, щоб активувати їх

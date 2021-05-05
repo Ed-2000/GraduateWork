@@ -1,5 +1,4 @@
-﻿using UnityEngine.SceneManagement;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StartMenu : MonoBehaviour
 { 
@@ -10,18 +9,18 @@ public class StartMenu : MonoBehaviour
 
     public void Play()
     {
-        OnButtonClick?.Invoke();
+        Click();
         LoadScene?.Invoke(1);
     }    
 
-    public void OpenSettingsPanel()
+    public void Click()
     {
         OnButtonClick?.Invoke();
     }
 
     public void Quit()
     {
-        OnButtonClick?.Invoke();
+        Click();
         Application.Quit();
     }
 }
